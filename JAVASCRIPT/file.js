@@ -2,6 +2,7 @@ $(document).ready(function(){
 	$(`.container`).hide().fadeIn(1000);
 	initiateTable();
 });
+
 let check=()=>
 {
 	
@@ -9,7 +10,7 @@ let check=()=>
 	let i=0;
 	for(let val of a)
 	{
-		let row=val.firstChild.innerHTML;
+		let row=val.childNodes[1].innerHTML;
 		if(row==document.getElementById(`roll`).value)
 		{
 			return 1;
@@ -52,11 +53,11 @@ $(document).on('click','#editBtn',()=> {
 		let i=1;
 		for(let val of a)
 		{
-			let row=val.firstChild.innerHTML;
+			let row=val.childNodes[1].innerHTML;
 			if(row==document.getElementById(`roll`).value)
 			{
-				val.childNodes[1].innerHTML=document.getElementById(`name`).value;
-				val.childNodes[2].innerHTML=document.getElementById(`email`).value;
+				val.childNodes[2].innerHTML=document.getElementById(`name`).value;
+				val.childNodes[3].innerHTML=document.getElementById(`email`).value;
 			}
 		}
 		$(`#btnClose`).trigger(`click`);
@@ -77,15 +78,29 @@ let delete_entry=(rollno)=>{
 	
 	for(let val of a)
 	{
-		let row=val.firstChild.innerHTML;
+		let row=val.childNodes[1].innerHTML;
 		if(parseInt(row)==parseInt(rollno))
 		{
 			table.deleteRow(i);
 		}
 		i++;
 	}
-
 }
+
+$(document).on('click','#deleteSelected',()=> {		
+	var a=document.getElementsByName("CHECKBOXES");
+	var arr=new Array();
+	for(let val of a)
+	{
+		if(val.checked)
+		{
+			arr.push(val.id);
+		}
+	}
+	for(let val of arr){
+		delete_entry(val);
+	}
+});
 
 $(document).on('click','#submitBtn',()=> {
 
@@ -125,7 +140,16 @@ $(document).on('click','#submitBtn',()=> {
 			window.alert(`RECORD ALREADY EXISTS`);
 		}
 		else{
+
 			let a=document.createElement(`tr`);
+			let j=document.createElement(`td`);
+			let k=document.createElement(`input`);
+			k.type=`checkbox`;
+			k.name="CHECKBOXES";
+			k.id=rollno;
+			j.appendChild(k);
+			a.appendChild(j);
+
 			let b=document.createElement(`td`);
 			let c=document.createTextNode(rollno);
 			b.appendChild(c);
